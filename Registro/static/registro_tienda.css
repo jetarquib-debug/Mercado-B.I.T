@@ -1,0 +1,167 @@
+/* Basado en registro_usuario.css, con animaciones de entrada/salida hacia la izquierda/derecha */
+
+.login-container{
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  position: relative;
+  background-image: url('https://wallpapers.com/images/hd/1920x1080-hd-beach-yu5ddqxdp4zfdqxn.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: 120%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: moveBackground 45s ease-in-out infinite;
+  overflow: auto;
+}
+
+
+@keyframes moveBackground {
+  0%, 100% {
+    background-position: center center; /* Imagen centrada al inicio y al final */
+  }
+  25% {
+    background-position: calc(50% - 30px) center; /* Desplazamos la imagen ligeramente hacia la izquierda */
+  }
+  50% {
+    background-position: calc(50% + 30px) center; /* Desplazamos la imagen ligeramente hacia la derecha */
+  }
+  75% {
+    background-position: calc(50% - 30px) center; /* Desplazamos de nuevo hacia la izquierda */
+  }
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.container.tienda {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px 30px;
+  width: 30%;
+  max-width: 70%;
+  position: relative;
+  z-index: 2;
+  max-height: 90vh;
+  overflow: auto; /* Permitir que el contenedor crezca y haga scroll si es necesario */
+}
+
+.container h2 {
+  text-align: center;
+  color: transparent;
+  font-size: 24px;
+  background-image: linear-gradient(66deg, #ff7e5f, #feb47b, #ff6a00, #ffd700, #8e44ad);
+  background-size: 400% 400%;
+  background-clip: text;
+  animation: rainbowText 35s linear infinite;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* Área de pasos: cada paso ocupa 100% del contenedor y se posiciona horizontalmente */
+.paso {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 0 0 0;
+  display: none; /* oculto por defecto */
+}
+
+.paso.activo {
+  display: block; /* paso visible */
+}
+
+/* Estilos básicos del formulario (reutilizados) */
+.registro-usuario-form .input-group {
+  margin-bottom: 18px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.registro-usuario-form .input-group label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.registro-usuario-form .input-group input,
+.registro-usuario-form .input-group select,
+.registro-usuario-form .input-group textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.registro-usuario-form .grid-2cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* Alinear el checkbox junto al texto de términos */
+.registro-usuario-form .input-group.terms {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.registro-usuario-form .input-group.terms label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.registro-usuario-form .input-group.terms input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+@media (max-width: 780px) {
+  .registro-usuario-form .grid-2cols { grid-template-columns: 1fr; }
+  .container.tienda { padding: 20px; }
+}
+
+.registro-usuario-form .actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  margin-bottom: 12px;
+}
+
+.registro-usuario-form button.btn {
+  padding: 10px 16px;
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.registro-usuario-form .error-messages {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+/* Animación arcoiris (reutilizada) */
+@keyframes rainbowText { 0% { background-position: 400% 0; } 50% { background-position: 0 100%; } 100% { background-position: 400% 0; } }

@@ -1,0 +1,121 @@
+{% extends 'Barra_marketplace.html' %}
+{% load static %}
+
+{% block title %}Registro Tienda y Usuario{% endblock title %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'registro_tienda.css' %}">
+	<!-- Incluir estilos base del formulario de usuario para mantener la misma apariencia -->
+	<link rel="stylesheet" href="{% static 'registro_usuario.css' %}">
+	<link rel="stylesheet" href="{% static 'Barra_marketplace.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="login-container registro-usuario-bg">
+	<div id="registro" class="container registro-usuario-form tienda">
+		<h2>Registrar Proveedor</h2>
+		<form method="post" id="formulario-registro-tienda">
+			{% csrf_token %}
+			<!-- Paso 1: datos del usuario (dos columnas) -->
+			<div id="form_usuario" class="formulario-paso paso activo">
+				<div class="grid-2cols">
+					{% for field in form_datos %}
+						<div class="input-group">
+							{{ field.label_tag }}
+							{{ field }}
+							{% if field.errors %}
+								<div class="error-messages">{{ field.errors|striptags }}</div>
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+				<div class="actions-row">
+					<button type="button" class="btn" onclick="irAPaso('tienda')">Siguiente</button>
+				</div>
+			</div>
+
+			<!-- Paso 2: datos de la tienda (dos columnas) -->
+			<div id="form_tienda" class="formulario-paso paso">
+				<div class="grid-2cols">
+					{% for field in form_tienda %}
+						<div class="input-group">
+							{{ field.label_tag }}
+							{{ field }}
+							{% if field.errors %}
+								<div class="error-messages">{{ field.errors|striptags }}</div>
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+
+				<div class="input-group terms" style="margin-top: 10px;">
+					<label>
+						<input type="checkbox" name="acepto_terminos" id="acepto_terminos_tienda">
+						Acepto los <a href="#" target="_blank">términos y condiciones</a>
+					</label>
+				</div>
+
+				<div class="actions-row" style="margin-top: 12px; display:flex; gap:12px;">
+					<button type="button" class="btn" onclick="irAPaso('usuario')" style="width:120px;">Atrás</button>
+					<button type="submit" class="btn" id="btn-registrar-tienda" style="width:140px;">Registrar Tienda</button>
+				</div>
+			</div>
+
+		</form>
+
+		{% if messages %}
+			<div class="error-messages">
+				{% for message in messages %}
+					<p>{{ message }}</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+</div>
+
+<script>
+function irAPaso(paso) {
+	var usuario = document.getElementById('form_usuario');
+	var tienda = document.getElementById('form_tienda');
+	if (paso === 'tienda') {
+		usuario.classList.remove('activo');
+		usuario.style.display = 'none';
+		tienda.style.display = 'block';
+		tienda.classList.add('activo');
+	} else {
+		tienda.classList.remove('activo');
+		tienda.style.display = 'none';
+		usuario.style.display = 'block';
+		usuario.classList.add('activo');
+	}
+}
+
+// Validación simple de checkbox
+document.getElementById('formulario-registro-tienda').addEventListener('submit', function(e) {
+    var aceptar = document.getElementById('acepto_terminos_tienda');
+    if (aceptar && !aceptar.checked) {
+        e.preventDefault();
+        alert('Debes aceptar los términos y condiciones para registrar la tienda.');
+        irAPaso('tienda');
+        aceptar.focus();
+    }
+});
+</script>
+
+<script>
+// Asegurar estado inicial: solo mostrar el primer formulario
+document.addEventListener('DOMContentLoaded', function() {
+	var usuario = document.getElementById('form_usuario');
+	var tienda = document.getElementById('form_tienda');
+	if (usuario) {
+		usuario.style.display = 'block';
+		usuario.classList.add('activo');
+	}
+	if (tienda) {
+		tienda.style.display = 'none';
+		tienda.classList.remove('activo');
+	}
+});
+</script>
+
+{% endblock content %}

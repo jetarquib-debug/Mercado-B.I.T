@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.shortcuts import render, redirect
 from .forms import DatosBasicosForm, UsuarioRegistroForm
+from .forms import TiendaForm
 from Usuarios.models import Usuario
 
 #crear una funcion para registrar usuarios usando los formularios creados en forms.py
@@ -31,5 +32,39 @@ def registrar_usuario(request):
     return render(request, 'registro_usuario.html', {
         'form_registro': form_registro,
         'form_datos': form_datos
+    })
+
+
+def registrar_usuario_tienda(request):
+    """Registro combinado: primero datos de usuario, luego datos de tienda."""
+    if request.method == 'POST':
+        form_registro = UsuarioRegistroForm(request.POST)
+        form_datos = DatosBasicosForm(request.POST)
+        form_tienda = TiendaForm(request.POST)
+
+        if form_registro.is_valid() and form_datos.is_valid() and form_tienda.is_valid():
+            usuario = form_registro.save()
+
+            datos_basicos = form_datos.save(commit=False)
+            datos_basicos.id = usuario.id
+            datos_basicos.save()
+
+            tienda = form_tienda.save(commit=False)
+            tienda.usuario = usuario
+            tienda.save()
+
+            messages.success(request, 'Registro de tienda y usuario exitoso.')
+            return redirect('login')
+        else:
+            messages.error(request, 'ERROR. Por favor corrige los errores en el formulario.')
+    else:
+        form_registro = UsuarioRegistroForm()
+        form_datos = DatosBasicosForm()
+        form_tienda = TiendaForm()
+
+    return render(request, 'registro_usuario_tienda.html', {
+        'form_registro': form_registro,
+        'form_datos': form_datos,
+        'form_tienda': form_tienda,
     })
         

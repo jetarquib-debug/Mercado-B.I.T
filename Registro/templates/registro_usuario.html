@@ -10,38 +10,57 @@
 
 {% block content %}
 <div class="login-container registro-usuario-bg">
-	<div class="container registro-usuario-form">
-		<h2>Registro de Usuario</h2>
+	<div id="registro" class="container registro-usuario-form">
+		<h2>Registrar Usuario</h2>
 		<form method="post" id="formulario-registro">
 			{% csrf_token %}
-			<div id="formulario-1" class="formulario-paso" style="display: block;">
-				{% for field in form_datos %}
-					<div class="input-group">
-						{{ field.label_tag }}
-						{{ field }}
-						{% if field.errors %}
-							<div class="error-messages">{{ field.errors|striptags }}</div>
-						{% endif %}
-					</div>
-				{% endfor %}
-				<button type="button" class="btn" onclick="mostrarPaso(2)">Siguiente</button>
+
+			<!-- Paso 1: datos personales en diseño de dos columnas -->
+			<div id="formulario-1" class="formulario-paso" style="display: block; width:100%;">
+				<div class="grid-2cols">
+					{% for field in form_datos %}
+						<div class="input-group">
+							{{ field.label_tag }}
+							{{ field }}
+							{% if field.errors %}
+								<div class="error-messages">{{ field.errors|striptags }}</div>
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+				<div class="actions-row">
+					<button type="button" class="btn" onclick="mostrarPaso(2)">Siguiente</button>
+				</div>
 			</div>
-			<div id="formulario-2" class="formulario-paso" style="display: none;">
-				{% for field in form_registro %}
-					<div class="input-group">
-						{{ field.label_tag }}
-						{{ field }}
-						{% if field.errors %}
-							<div class="error-messages">{{ field.errors|striptags }}</div>
-						{% endif %}
-					</div>
-				{% endfor %}
-				<div style="display: flex; gap: 10px; width: 100%;">
-					<button type="button" class="btn" onclick="mostrarPaso(1)">Atrás</button>
-					<button type="submit" class="btn">Registrar</button>
+
+			<!-- Paso 2: datos de cuenta + checkbox de términos y botón Registrar -->
+			<div id="formulario-2" class="formulario-paso" style="display: none; width:100%;">
+				<div class="grid-2cols">
+					{% for field in form_registro %}
+						<div class="input-group">
+							{{ field.label_tag }}
+							{{ field }}
+							{% if field.errors %}
+								<div class="error-messages">{{ field.errors|striptags }}</div>
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+
+				<div class="input-group terms" style="margin-top: 10px;">
+					<label>
+						<input type="checkbox" name="acepto_terminos" id="acepto_terminos">
+						Acepto los <a href="#" target="_blank">términos y condiciones</a>
+					</label>
+				</div>
+
+				<div class="actions-row" style="margin-top: 12px; display:flex; gap:12px;">
+					<button type="button" class="btn" onclick="mostrarPaso(1)" style="width:120px;">Atrás</button>
+					<button type="submit" class="btn" id="btn-registrar" style="width:120px;">Registrar</button>
 				</div>
 			</div>
 		</form>
+
 		{% if messages %}
 			<div class="error-messages">
 				{% for message in messages %}
@@ -51,11 +70,37 @@
 		{% endif %}
 	</div>
 </div>
+
 <script>
 // Mostrar el paso correspondiente del formulario
 function mostrarPaso(paso) {
 	document.getElementById('formulario-1').style.display = (paso === 1) ? 'block' : 'none';
 	document.getElementById('formulario-2').style.display = (paso === 2) ? 'block' : 'none';
 }
+
+// Validación simple: evitar enviar si no se acepta términos (lado cliente)
+document.getElementById('formulario-registro').addEventListener('submit', function(e) {
+	var aceptar = document.getElementById('acepto_terminos');
+	if (aceptar && !aceptar.checked) {
+		e.preventDefault();
+		alert('Debes aceptar los términos y condiciones para registrarte.');
+		mostrarPaso(2);
+		aceptar.focus();
+	}
+});
+
+// Si la URL contiene el fragmento #registro, hacer scroll suave al contenedor
+document.addEventListener('DOMContentLoaded', function() {
+	if (window.location.hash === '#registro') {
+		var el = document.getElementById('registro');
+		if (el) {
+			// offset para evitar que la barra superior lo tape (ajusta 70px según tu header)
+			var offset = 70;
+			var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+			window.scrollTo({ top: top, behavior: 'smooth' });
+		}
+	}
+});
 </script>
+
 {% endblock content %}

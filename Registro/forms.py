@@ -2,6 +2,7 @@ from datetime import date
 from django import forms
 from django.core.exceptions import ValidationError
 from Usuarios.models import Usuario
+from Tiendas.models import Tienda
 
 class DatosBasicosForm(forms.ModelForm):
     class Meta:
@@ -90,3 +91,28 @@ class UsuarioRegistroForm(forms.Form):
         user.set_password(user.contrasena)  # Encriptación de la contraseña
         user.save()
         return user
+
+
+class TiendaForm(forms.ModelForm):
+    class Meta:
+        model = Tienda
+        fields = ['nombre_tienda', 'descripcion', 'email', 'codigo_pais', 'telefono', 'direccion', 'distrito', 'provincia', 'pais', 'ruc']
+        widgets = {
+            'nombre_tienda': forms.TextInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'codigo_pais': forms.Select(attrs={'class': 'form-control'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control'}),
+            'direccion': forms.TextInput(attrs={'class': 'form-control'}),
+            'distrito': forms.Select(attrs={'class': 'form-control'}),
+            'provincia': forms.Select(attrs={'class': 'form-control'}),
+            'pais': forms.Select(attrs={'class': 'form-control'}),
+            'ruc': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+    def clean_ruc(self):
+        ruc = self.cleaned_data.get('ruc')
+        if ruc:
+            if not ruc.isdigit() or len(ruc) not in (11,):
+                raise ValidationError('El RUC debe tener 11 dígitos numéricos.')
+        return ruc

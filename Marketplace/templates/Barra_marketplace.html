@@ -1,12 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
 {% load static %}
-{% block title %}Marketplace{% endblock title %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Marketplace{% endblock title %}</title>
 
-<!-- Cargar el archivo de la barra de navegación dentro del bloque css -->
-{% block css %}
-    <link rel="stylesheet" href="{% static 'css/registro_usuario.css' %}">
-    <link rel="stylesheet" href="{% static 'Barra_marketplace.css' %}">
-{% endblock css %}
-
+    <!-- Cargar el archivo de la barra de navegación dentro del bloque css -->
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/registro_usuario.css' %}">
+        <link rel="stylesheet" href="{% static 'Barra_marketplace.css' %}">
+    {% endblock css %}
 </head>
 <body>
     <!-- Barra de navegación -->
@@ -24,15 +28,24 @@
             </div>
         </div>
         <div class="posicion">
-            <a href="{% url 'registro' %}">Regístrate</a>
+            <!-- Enlace hacia la página de registro con fragmento para posicionar en el formulario -->
+            <a href="{% url 'registro' %}#registro">Regístrate </a>
         </div>
         <div class="posicion">
-            <span>Mis compras</span>
+            <a href="#">Mis compras</a>
         </div>
         <div class="posicion">
-            <span>🛒</span>
+            <a href="#">🛒</a>
         </div>
     </header>
+    <div class="header_contenedor_secundario">
+        <div>
+            <a href="{% url 'registro_tienda' %}#registro">Se nuestro proveedor</a>
+        </div>
+        <div>
+            <span>Mis ventas</span>
+        </div>
+    </div>
 
     {% block content %}
     {% endblock content %}
@@ -41,3 +54,4 @@
     <script src="{% static 'Barra_marketplace.js' %}"></script>
 </body>
 </html>
+
