@@ -1,0 +1,61 @@
+{% extends 'Barra_marketplace.html' %}
+{% load static %}
+
+{% block title %}Registro de Usuario{% endblock title %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'registro_usuario.css' %}">
+	<link rel="stylesheet" href="{% static 'Barra_marketplace.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="login-container registro-usuario-bg">
+	<div class="container registro-usuario-form">
+		<h2>Registro de Usuario</h2>
+		<form method="post" id="formulario-registro">
+			{% csrf_token %}
+			<div id="formulario-1" class="formulario-paso" style="display: block;">
+				{% for field in form_datos %}
+					<div class="input-group">
+						{{ field.label_tag }}
+						{{ field }}
+						{% if field.errors %}
+							<div class="error-messages">{{ field.errors|striptags }}</div>
+						{% endif %}
+					</div>
+				{% endfor %}
+				<button type="button" class="btn" onclick="mostrarPaso(2)">Siguiente</button>
+			</div>
+			<div id="formulario-2" class="formulario-paso" style="display: none;">
+				{% for field in form_registro %}
+					<div class="input-group">
+						{{ field.label_tag }}
+						{{ field }}
+						{% if field.errors %}
+							<div class="error-messages">{{ field.errors|striptags }}</div>
+						{% endif %}
+					</div>
+				{% endfor %}
+				<div style="display: flex; gap: 10px; width: 100%;">
+					<button type="button" class="btn" onclick="mostrarPaso(1)">Atrás</button>
+					<button type="submit" class="btn">Registrar</button>
+				</div>
+			</div>
+		</form>
+		{% if messages %}
+			<div class="error-messages">
+				{% for message in messages %}
+					<p>{{ message }}</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+</div>
+<script>
+// Mostrar el paso correspondiente del formulario
+function mostrarPaso(paso) {
+	document.getElementById('formulario-1').style.display = (paso === 1) ? 'block' : 'none';
+	document.getElementById('formulario-2').style.display = (paso === 2) ? 'block' : 'none';
+}
+</script>
+{% endblock content %}
